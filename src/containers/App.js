@@ -1,65 +1,22 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
-import Explore from '../components/Explore'
-import { resetErrorMessage } from '../actions'
+import React from "react"
+import {Grid, Row, Col} from "react-bootstrap"
+import Search from "./Search"
+import Nav from "./Nav"
 
-class App extends Component {
-  static propTypes = {
-    // Injected by React Redux
-    errorMessage: PropTypes.string,
-    resetErrorMessage: PropTypes.func.isRequired,
-    inputValue: PropTypes.string.isRequired,
-    // Injected by React Router
-    children: PropTypes.node
-  }
-
-  handleDismissClick = e => {
-    this.props.resetErrorMessage()
-    e.preventDefault()
-  }
-
-  handleChange = nextValue => {
-    browserHistory.push(`/${nextValue}`)
-  }
-
-  renderErrorMessage() {
-    const { errorMessage } = this.props
-    if (!errorMessage) {
-      return null
-    }
-
-    return (
-      <p style={{ backgroundColor: '#e99', padding: 10 }}>
-        <b>{errorMessage}</b>
-        {' '}
-        (<a href="#"
-            onClick={this.handleDismissClick}>
-          Dismiss
-        </a>)
-      </p>
-    )
-  }
-
-  render() {
-    const { children, inputValue } = this.props
-    return (
-      <div>
-        <Explore value={inputValue}
-                 onChange={this.handleChange} />
-        <hr />
-        {this.renderErrorMessage()}
-        {children}
-      </div>
-    )
-  }
+const App = (props) => {
+  return (
+    <Grid>
+      <Nav />
+      <Row>
+        <Col xs={3}>
+          <Search />
+        </Col>
+        <Col xs={9}>
+          {props.children}
+        </Col>
+      </Row>
+    </Grid>
+  )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  errorMessage: state.errorMessage,
-  inputValue: ownProps.location.pathname.substring(1)
-})
-
-export default connect(mapStateToProps, {
-  resetErrorMessage
-})(App)
+export default App
